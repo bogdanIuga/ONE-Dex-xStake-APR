@@ -11,10 +11,10 @@ const {
     U32Value
 } = require('@multiversx/sdk-core/out');
 
+// Set up Express app and Firebase Admin SDK
 const app = express();
 admin.initializeApp();
-
-app.use(cors({ origin: true }));
+app.use(cors({ origin: true })); // Enable CORS for all routes
 
 app.get('/aprs', async (req, res) => {
     try {
@@ -60,6 +60,7 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 500;  // milliseconds
 const ROUNDS_PER_DAY = 14400;
 
+// Define the main APR calculation function
 const processAPRCalculation = async () => {
     const pools = await getActivePools();
     const prices = await fetchPrices();
