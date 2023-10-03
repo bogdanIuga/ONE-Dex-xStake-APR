@@ -1,0 +1,509 @@
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.74.0-nightly",
+            "commitHash": "4e78abb437a0478d1f42115198ee45888e5330fd",
+            "commitDate": "2023-08-28",
+            "channel": "Nightly",
+            "short": "rustc 1.74.0-nightly (4e78abb43 2023-08-28)"
+        },
+        "contractCrate": {
+            "name": "dualstake",
+            "version": "0.0.0"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.43.3"
+        }
+    },
+    "name": "DualstakeContract",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "docs": [
+                "\\n     * Create stake\\n     "
+            ],
+            "name": "createStake",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "EGLD"
+            ],
+            "inputs": [
+                {
+                    "name": "stake_tokens",
+                    "type": "List<TokenIdentifier>"
+                },
+                {
+                    "name": "stake_ratios",
+                    "type": "List<BigUint>"
+                },
+                {
+                    "name": "reward_tokens",
+                    "type": "List<TokenIdentifier>"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u32"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "\\n     * Set stake state\\n     "
+            ],
+            "name": "setStakeState",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                },
+                {
+                    "name": "new_state",
+                    "type": "State"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * Add stake rewards\\n     "
+            ],
+            "name": "addStakeRewards",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * Withdraw stake rewards\\n     "
+            ],
+            "name": "withdrawStakeRewards",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                },
+                {
+                    "name": "payments",
+                    "type": "List<EsdtTokenPayment>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * Change stake end\\n     "
+            ],
+            "name": "changeStakeEnd",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                },
+                {
+                    "name": "new_end_nonce",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * Consolidate checkpoints\\n     "
+            ],
+            "name": "consolidateCheckpoints",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "setState",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "new_state",
+                    "type": "State"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getState",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "State"
+                }
+            ]
+        },
+        {
+            "name": "getFeeAddress1",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "getFeeAddress2",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "setFeeAddresses",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "address1",
+                    "type": "Address"
+                },
+                {
+                    "name": "address2",
+                    "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "serviceAddress",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "setServiceAddress",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getLastStakeID",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u32"
+                }
+            ]
+        },
+        {
+            "name": "getStakes",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "List<Stake>"
+                }
+            ]
+        },
+        {
+            "name": "getStake",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "Stake"
+                }
+            ]
+        },
+        {
+            "name": "getCheckpointIDs",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "List<u32>"
+                }
+            ]
+        },
+        {
+            "name": "getStakeCheckpoints",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                },
+                {
+                    "name": "checkpoint_id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "Checkpoint"
+                }
+            ]
+        },
+        {
+            "name": "getLastCheckpoint",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "Checkpoint"
+                }
+            ]
+        },
+        {
+            "name": "getStakers",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getUserStake",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u32"
+                },
+                {
+                    "name": "user",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "UserStake"
+                }
+            ]
+        },
+        {
+            "name": "getAllUserStakes",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "user",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<u32>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "docs": [
+                "\\n     * User stake\\n     "
+            ],
+            "name": "userStake",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * User unstake\\n     "
+            ],
+            "name": "userUnstake",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                },
+                {
+                    "name": "payments",
+                    "type": "List<EsdtTokenPayment>"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "\\n     * Claim rewards\\n     "
+            ],
+            "name": "claimRewards",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                }
+            ],
+            "outputs": []
+        }
+    ],
+    "events": [],
+    "hasCallback": false,
+    "types": {
+        "Checkpoint": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "staked",
+                    "type": "List<BigUint>"
+                },
+                {
+                    "name": "rewards",
+                    "type": "List<BigUint>"
+                },
+                {
+                    "name": "start_nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "end_nonce",
+                    "type": "u64"
+                }
+            ]
+        },
+        "EsdtTokenPayment": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "token_identifier",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "token_nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "amount",
+                    "type": "BigUint"
+                }
+            ]
+        },
+        "Stake": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "stake_id",
+                    "type": "u32"
+                },
+                {
+                    "name": "owner",
+                    "type": "Address"
+                },
+                {
+                    "name": "stake_tokens",
+                    "type": "List<TokenIdentifier>"
+                },
+                {
+                    "name": "stake_ratios",
+                    "type": "List<BigUint>"
+                },
+                {
+                    "name": "reward_tokens",
+                    "type": "List<TokenIdentifier>"
+                },
+                {
+                    "name": "state",
+                    "type": "State"
+                },
+                {
+                    "name": "start_nonce",
+                    "type": "u64"
+                }
+            ]
+        },
+        "State": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "Inactive",
+                    "discriminant": 0
+                },
+                {
+                    "name": "Active",
+                    "discriminant": 1
+                }
+            ]
+        },
+        "UserStake": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "staked",
+                    "type": "List<BigUint>"
+                },
+                {
+                    "name": "rewards",
+                    "type": "List<BigUint>"
+                },
+                {
+                    "name": "last_update_nonce",
+                    "type": "u64"
+                }
+            ]
+        }
+    }
+}
