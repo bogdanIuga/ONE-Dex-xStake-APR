@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 const axios = require('axios');
 const admin = require('firebase-admin');
+const express = require('express');
+const cors = require('cors');
 
 const { ProxyNetworkProvider } = require('@multiversx/sdk-network-providers/out');
 const {
@@ -76,7 +78,7 @@ const processAPRCalculation = async () => {
 
             if (!checkpoint) {
                 console.log(`Failed to fetch checkpoint for pool ${pool.stake_id}`);
-                return;
+                continue;
             }
 
             const tokensSet = new Set([...pool.stake_tokens, ...pool.reward_tokens]);
@@ -84,14 +86,14 @@ const processAPRCalculation = async () => {
             const tokenDecimals = await fetchTokenDecimals(uniqueTokens);
             if (!tokenDecimals) {
                 console.log(`Failed to fetch token decimals for pool ${pool.stake_id}`);
-                return;
+                continue;
             }
 
             const poolDays = (Number(checkpoint.end_nonce) - Number(checkpoint.start_nonce)) / ROUNDS_PER_DAY;
 
             const totalStakedValue = calculateValue(checkpoint.staked, prices, pool.stake_tokens, tokenDecimals);
             if (totalStakedValue === 0) {
-                return;
+                continue;
             }
 
             const totalRewardsValue = calculateValue(checkpoint.rewards, prices, pool.reward_tokens, tokenDecimals);
@@ -118,7 +120,7 @@ const getLastCheckpoint = async (poolId, retryCount = 0) => {
         const queryResponse = await networkProvider.queryContract(query);
         const typedBundle = new ResultsParser().parseQueryResponse(queryResponse, interaction.getEndpoint());
         const checkpoint = typedBundle.values[0].valueOf();
-        console.log(checkpoint);
+        console.log('Pool checkpoint:', JSON.stringify(checkpoint));
 
         return checkpoint;
     } catch (err) {
@@ -187,7 +189,7 @@ const calculateValue = (amounts, prices, tokens, tokenDecimals) => {
 
         if (!prices[token]) {
             console.log(`Price not found for token: ${token}`);
-            continue;
+            return 0;
         }
 
         const decimalFactor = Math.pow(10, tokenDecimals[token] || 18);
@@ -213,7 +215,6 @@ const fetchTokenDecimals = async (tokens) => {
         return null;
     }
 };
-
 
 //startup
 processAPRCalculation();
