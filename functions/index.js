@@ -3,6 +3,7 @@ const axios = require('axios');
 const admin = require('firebase-admin');
 const express = require('express');
 const cors = require('cors');
+const serviceAccount = require('./one-dex-xstake-apr-firebase-adminsdk-2sut0-769a422d3f.json');
 
 const { ProxyNetworkProvider } = require('@multiversx/sdk-network-providers/out');
 const {
@@ -15,7 +16,9 @@ const {
 
 // Set up Express app and Firebase Admin SDK
 const app = express();
-admin.initializeApp();
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 app.use(cors({ origin: true })); // Enable CORS for all routes
 
 app.get('/aprs', async (req, res) => {
@@ -42,7 +45,7 @@ const abiRegistry = AbiRegistry.create(abiFile)
 const chainID = "D";
 let contractAddress = "erd1qqqqqqqqqqqqqpgq5k55q4tsrxa7f6rxwuk5rtzkva4m527svcqsp0p7h2";
 let gatewayURL = "https://devnet-gateway.multiversx.com";
-let pricesURL = "https://api.onedex.app/prices";
+let pricesURL = "https://api.onedex.app/devnet/prices";
 
 //PROD VERSION
 if (chainID === 1) {
@@ -97,6 +100,9 @@ const processAPRCalculation = async () => {
             }
 
             const totalRewardsValue = calculateValue(checkpoint.rewards, prices, pool.reward_tokens, tokenDecimals);
+            if (totalRewardsValue === 0) {
+                continue;
+            }
 
             const dailyRewardRate = totalRewardsValue / poolDays;
             const APR = (dailyRewardRate / totalStakedValue) * 365 * 100;
@@ -111,6 +117,8 @@ const processAPRCalculation = async () => {
             console.log(`Error processing pool ${pool.stake_id}: ${err}`);
         }
     };
+
+    console.log(`----------- END processAPRCalculation ${new Date().toISOString()} -----------`);
 };
 
 const getLastCheckpoint = async (poolId, retryCount = 0) => {
@@ -187,14 +195,16 @@ const calculateValue = (amounts, prices, tokens, tokenDecimals) => {
     for (let i = 0; i < amounts.length; i++) {
         const token = tokens[i];
 
-        if (!prices[token]) {
+        const priceObj = prices.find(price => price.identifier === token);
+
+        if (!priceObj) {
             console.log(`Price not found for token: ${token}`);
             return 0;
         }
 
         const decimalFactor = Math.pow(10, tokenDecimals[token] || 18);
         const amount = Number(amounts[i]) / decimalFactor;
-        const price = prices[token].priceUsdc;
+        const price = priceObj.priceUsdc;
         totalValue += amount * price;
     }
 
